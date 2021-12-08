@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Common.fs" />
+        <Compile Include="Day1.fs" />
+        <Compile Include="Day2.fs" />
+        <Compile Include="Day3.fs" />
+        <Compile Include="Day4.fs" />
+        <Compile Include="Day5.fs" />
+        <Compile Include="Day6.fs" />
+        <Compile Include="Day7.fs" />
+        <Compile Include="Day8.fs" />
+        <Compile Include="Program.fs" />
+        <EmbeddedResource Include="data\day1.txt" />
+        <EmbeddedResource Include="data\day2.txt" />
+        <EmbeddedResource Include="data\day3.txt" />
+        <EmbeddedResource Include="data\day4.txt" />
+        <EmbeddedResource Include="data\day5.txt" />
+        <EmbeddedResource Include="data\day6.txt" />
+        <EmbeddedResource Include="data\day7.txt" />
+        <EmbeddedResource Include="data\day8.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FSharp.Stats" Version="0.4.2" />
+    </ItemGroup>
+
+</Project>
