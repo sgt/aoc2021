@@ -38,9 +38,9 @@ type Vent =
                     while true do
                         v.X1
                 },
-                seq { v.Y1 .. sign (v.yLen) .. v.Y2 }
+                seq { v.Y1 .. sign v.yLen .. v.Y2 }
             elif v.yLen = 0 then
-                seq { v.X1 .. sign (v.xLen) .. v.X2 },
+                seq { v.X1 .. sign v.xLen .. v.X2 },
                 seq {
                     while true do
                         v.Y1
