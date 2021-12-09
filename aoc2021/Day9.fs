@@ -111,7 +111,7 @@ let private discoverAllBasins (board: Board) : Set<Position> list =
 
         match discoverBasinSeed board found with
         | None -> acc
-        | Some (seed) -> discoverAllBasinsRec ((discoverBasin board seed) :: acc)
+        | Some seed -> discoverAllBasinsRec ((discoverBasin board seed) :: acc)
 
     discoverAllBasinsRec List.empty
 
