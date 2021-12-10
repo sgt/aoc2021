@@ -82,10 +82,11 @@ let private cost2 (c: char) : int =
     | '>' -> 4
     | _ -> failwith "unknown character"
 
-let private totalCost2 (xs: char list) : int =
-    xs |> List.fold (fun acc i -> acc * 5 + cost2 i) 0
+let private totalCost2 (xs: char list) : bigint =
+    xs
+    |> List.fold (fun acc i -> acc * 5I + bigint (cost2 i)) 0I
 
-let private solve2 (input: seq<string>) : int =
+let private solve2 (input: seq<string>) =
     input
     |> Seq.map checkLine
     |> Seq.choose
@@ -97,5 +98,5 @@ let private solve2 (input: seq<string>) : int =
     |> Seq.sort
     |> median
 
-let test10_2 () : int = testData |> solve2
-let solution10_2 () : int = readLines "day10.txt" |> solve2
+let test10_2 () = testData |> solve2
+let solution10_2 () = readLines "day10.txt" |> solve2
