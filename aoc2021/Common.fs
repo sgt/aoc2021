@@ -35,7 +35,6 @@ let (|Regex|_|) pattern input =
         None
 
 /// for chain debugging
-let tap data =
-    let materialized = List.ofSeq data
-    printfn $"%A{materialized}"
+let tap (data: 'a) : 'a =
+    printfn $"%A{data}"
     data

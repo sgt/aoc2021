@@ -1,6 +1,7 @@
 ﻿module aoc2021.Day9
 
 open aoc2021.Common
+open aoc2021.Grid
 
 let private testData =
     "2199943210
@@ -10,81 +11,35 @@ let private testData =
 9899965678"
     |> readTestLines
 
-type private Position = int * int
 
-type private Board(input: seq<string>) =
-    let data =
-        input
-        |> Seq.toArray
-        |> Array.map (Seq.toArray >> Array.map (string >> int))
+let private isLow (grid: Grid<_>) (pos: Position) : bool =
+    let v = grid.Data.[pos]
 
-    let height = data.Length
-    let width = data.[0].Length
+    grid.neighboursDirect pos
+    |> List.map snd
+    |> List.forall (fun i -> (i > v))
 
-    member this.get(x: int, y: int) : int = data.[y].[x]
-
-    member this.left(x: int, y: int) : (Position * int) option =
-        if x = 0 then
-            None
-        else
-            let pos = ((x - 1), y)
-            Some(pos, this.get pos)
-
-    member this.right(x: int, y: int) : (Position * int) option =
-        if x = width - 1 then
-            None
-        else
-            let pos = ((x + 1), y)
-            Some(pos, this.get pos)
-
-    member this.up(x: int, y: int) : (Position * int) option =
-        if y = 0 then
-            None
-        else
-            let pos = (x, (y - 1))
-            Some(pos, this.get pos)
-
-    member this.down(x: int, y: int) : (Position * int) option =
-        if y = height - 1 then
-            None
-        else
-            let pos = (x, (y + 1))
-            Some(pos, this.get pos)
-
-    member this.isLow(pos: Position) : bool =
-        let v = this.get pos
-
-        [ this.left pos
-          this.right pos
-          this.up pos
-          this.down pos ]
-        |> List.choose (Option.map snd)
-        |> List.forall (fun i -> (i > v))
-
-    // a seq with all cells in board as position * value
-    member this.cells: seq<Position * int> =
-        seq {
-            for y in 0 .. height - 1 do
-                for x in 0 .. width - 1 do
-                    yield ((x, y), this.get (x, y))
-        }
-
-    member this.lows: seq<int> =
-        [ for pos, v in this.cells do
-              if this.isLow pos then v ]
+let private lows (grid: Grid<int>) : seq<int> =
+    grid.Data
+    |> Map.filter (fun pos _ -> isLow grid pos)
+    |> Map.values
+    |> seq
 
 let private solution1 (input: seq<string>) : int =
-    Board(input).lows |> Seq.map ((+) 1) |> Seq.sum
+    input
+    |> gridFromIntInput
+    |> lows
+    |> Seq.map ((+) 1)
+    |> Seq.sum
 
 let test9_1 () : int = testData |> solution1
 let solution9_1 () : int = readLines "day9.txt" |> solution1
 
-let private discoverBasinSeed (board: Board) (found: Set<Position>) : Position option =
-    board.cells
-    |> Seq.tryFind (fun (pos, v) -> not (Set.contains pos found) && v <> 9)
-    |> Option.map fst
+let private discoverBasinSeed (grid: Grid<_>) (found: Set<Position>) : Position option =
+    grid.Data
+    |> Map.tryFindKey (fun pos v -> v <> 9 && not (Set.contains pos found))
 
-let private discoverBasin (board: Board) (seed: Position) : Set<Position> =
+let private discoverBasin (grid: Grid<_>) (seed: Position) : Set<Position> =
     let rec discoverBasinRec (found: Set<Position>) (queue: Set<Position>) : Set<Position> =
         if queue.IsEmpty then
             found
@@ -92,11 +47,7 @@ let private discoverBasin (board: Board) (seed: Position) : Set<Position> =
             let init = queue.MinimumElement
 
             let newlyFound =
-                [ board.up init
-                  board.down init
-                  board.left init
-                  board.right init ]
-                |> List.choose id
+                grid.neighboursDirect init
                 |> List.filter (fun (pos, v) -> v <> 9 && not (found.Contains pos))
                 |> List.map fst
                 |> set
@@ -105,18 +56,20 @@ let private discoverBasin (board: Board) (seed: Position) : Set<Position> =
 
     discoverBasinRec Set.empty (Set.singleton seed)
 
-let private discoverAllBasins (board: Board) : Set<Position> list =
+let private discoverAllBasins (grid: Grid<_>) : Set<Position> list =
     let rec discoverAllBasinsRec (acc: Set<Position> list) : Set<Position> list =
         let found = acc |> List.fold (+) Set.empty
 
-        match discoverBasinSeed board found with
+        match discoverBasinSeed grid found with
         | None -> acc
-        | Some seed -> discoverAllBasinsRec ((discoverBasin board seed) :: acc)
+        | Some seed -> discoverAllBasinsRec ((discoverBasin grid seed) :: acc)
 
     discoverAllBasinsRec List.empty
 
 let solution2 (input: seq<string>) : int =
-    discoverAllBasins (Board(input))
+    input
+    |> gridFromIntInput
+    |> discoverAllBasins
     |> List.map Set.count
     |> List.sortDescending
     |> List.take 3
