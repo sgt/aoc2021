@@ -38,3 +38,19 @@ let (|Regex|_|) pattern input =
 let tap (data: 'a) : 'a =
     printfn $"%A{data}"
     data
+
+let superCountBy (projection: 'T -> 'Key) (source: seq<'T>) : seq<'Key * uint64> =
+    source
+    |> Seq.fold
+        (fun acc i -> Map.change (projection i) (fun o -> Some((Option.defaultValue 0UL o) + 1UL)) acc)
+        Map.empty
+    |> Map.toSeq
+
+let increaseMapCount (key: 'Key) (count: uint64) (table: Map<'Key, uint64>) =
+    table
+    |> Map.change
+        key
+        (fun o ->
+            match o with
+            | Some x -> Some(x + count)
+            | None -> Some(count))

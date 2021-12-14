@@ -114,16 +114,15 @@ let private solve (paper: Paper) (folds: Fold list) : Paper =
         folds
 
 let private solve1 (paper: Paper, folds: Fold list) : int =
-    solve paper (List.take 1 folds)
-    |> Set.count
-let private solve2 (paper: Paper, folds: Fold list) : string =
-    solve paper folds
-    |> paperToString
+    solve paper (List.take 1 folds) |> Set.count
+
+let private solve2 (paper: Paper, folds: Fold list) : string = solve paper folds |> paperToString
 let test13_1 () = testData |> parseInput |> solve1
 
 let solution13_1 () =
     readLines "day13.txt" |> parseInput |> solve1
 
-let test13_2 () = testData |> parseInput|>solve2
+let test13_2 () = testData |> parseInput |> solve2
+
 let solution13_2 () =
     readLines "day13.txt" |> parseInput |> solve2
