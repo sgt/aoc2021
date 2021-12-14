@@ -12,6 +12,7 @@ open aoc2021.Day9
 open aoc2021.Day10
 open aoc2021.Day11
 open aoc2021.Day12
+open aoc2021.Day13
 
 [<EntryPoint>]
 let main argv =
@@ -19,7 +20,7 @@ let main argv =
         if argv.Length > 0 then
             int argv.[0]
         else
-            12
+            13
 
     match day with
     | 1 ->
@@ -61,6 +62,9 @@ let main argv =
         printfn $"12.2: %A{test12_2_2 ()}"
         printfn $"12.2: %A{test12_2_3 ()}"
         printfn $"12.2: %A{solution12_2 ()}"
+    | 13 ->
+        printfn $"13.1: %A{solution13_1 ()}"
+        printfn $"13.2:\n%s{solution13_2 ()}"
     | _ -> failwith "no such day"
 
     0
