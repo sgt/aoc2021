@@ -84,8 +84,7 @@ let private shortestPath (grid: Grid<int>) (start: Position) (goal: Position) : 
           GScore = Map.ofSeq [ (start, 0) ]
           CameFrom = Map.empty }
 
-let private solve (input: seq<string>) =
-    let grid = input |> gridFromIntInput
+let private solve (grid: Grid<int>) =
 
     shortestPath grid (0, 0) (grid.Width - 1, grid.Height - 1)
     |> List.map (fun p -> p, grid.Data |> Map.find p)
@@ -93,5 +92,40 @@ let private solve (input: seq<string>) =
     |> List.tail
     |> List.sum
 
-let test15_1 () = testData |> solve
-let solution15_1 () = readLines "day15.txt" |> solve
+/// expand grid as described in 15.2
+let rec private expandGrid (factor: int) (grid: Grid<int>) : Grid<int> =
+    let data =
+        seq {
+            for y in 0 .. factor - 1 do
+                for x in 0 .. factor - 1 do
+                    yield
+                        grid.Data
+                        |> Map.toSeq
+                        |> Seq.map
+                            (fun ((px, py), v) ->
+                                let newV = v + x + y
+                                (px + x * grid.Width, py + y * grid.Height), (if newV > 9 then newV % 9 else newV))
+        }
+        |> Seq.collect id
+        |> Map.ofSeq
+
+    { Data = data
+      Width = grid.Width * factor
+      Height = grid.Height * factor }
+
+let test15_1 () = testData |> gridFromIntInput |> solve
+
+let solution15_1 () =
+    readLines "day15.txt" |> gridFromIntInput |> solve
+
+let test15_2 () =
+    testData
+    |> gridFromIntInput
+    |> expandGrid 5
+    |> solve
+
+let solution15_2 () =
+    readLines "day15.txt"
+    |> gridFromIntInput
+    |> expandGrid 5
+    |> solve

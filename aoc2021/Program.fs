@@ -68,8 +68,8 @@ let main argv =
         printfn $"14.1: %A{solution14_1 ()}"
         printfn $"14.2: %A{solution14_2 ()}"
     | 15 ->
-        printfn $"15.1: %A{test15_1 ()}"
         printfn $"15.1: %A{solution15_1 ()}"
+        printfn $"15.2: %A{solution15_2 ()}"
     | _ -> failwith "no such day"
 
     0
