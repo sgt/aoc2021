@@ -81,7 +81,7 @@ let private step (rules: RuleMap) (template: Template) : Template =
 
     { template with Pairs = newPairs }
 
-let private solve1 (n: int) (template: Template, rules: RuleMap) : uint64 =
+let private solve (n: int) (template: Template, rules: RuleMap) : uint64 =
     let resultTemplate =
         { 1 .. n }
         |> Seq.fold (fun acc _ -> step rules acc) template
@@ -93,12 +93,12 @@ let private solve1 (n: int) (template: Template, rules: RuleMap) : uint64 =
 
     (snd freqs.[0] - snd freqs.[freqs.Length - 1])
 
-let test14_1 () = testData |> readInput |> solve1 10
+let test14_1 () = testData |> readInput |> solve 10
 
 let solution14_1 () =
-    readLines "day14.txt" |> readInput |> solve1 10
+    readLines "day14.txt" |> readInput |> solve 10
 
-let test14_2 () = testData |> readInput |> solve1 40
+let test14_2 () = testData |> readInput |> solve 40
 
 let solution14_2 () =
-    readLines "day14.txt" |> readInput |> solve1 40
+    readLines "day14.txt" |> readInput |> solve 40
