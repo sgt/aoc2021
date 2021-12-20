@@ -44,10 +44,6 @@ let private toGamma (numbers: list<string>) : string =
     |> Seq.map mostCommonElement
     |> System.String.Concat
 
-let private binToInt (s: string) : int =
-    Array.fold (fun acc x -> acc * 2 + ((string >> int) x)) 0 (s.ToCharArray())
-
-
 let private solve3_1 (input: list<string>) : int =
     let binGamma = input |> toGamma
     let binEpsilon = flipString binGamma

@@ -54,3 +54,15 @@ let increaseMapCount (key: 'Key) (count: uint64) (table: Map<'Key, uint64>) =
             match o with
             | Some x -> Some(x + count)
             | None -> Some(count))
+
+let binToInt (s: string) : int =
+    s.ToCharArray()
+    |> Array.fold (fun acc x -> acc * 2 + (x |> string |> int)) 0
+
+let binToInt64 (s: string) : int64 =
+    s.ToCharArray()
+    |> Array.fold (fun acc x -> acc * 2L + (x |> string |> int64)) 0
+
+let binSeqToInt (s: seq<char>) : int =
+    s
+    |> Seq.fold (fun acc x -> acc * 2 + (x |> string |> int)) 0
